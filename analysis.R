@@ -34,3 +34,12 @@ ggplot(acc_by_confidence, aes(x = Confidence, y = mean_acc, color = age_label)) 
 
 ggsave("plots/confidence_calibration.png", width = 6, height = 4)
 
+# Mixed-effects logistic regression:
+# does confidence predict accuracy, and does age add anything beyond confidence?
+# Random intercept for each child to account for repeated measures
+model <- glmer(Acc ~ Confidence + age_grp + (1 | ppt),
+               data = cued_recall %>% filter(DK == 0),
+               family = binomial)
+
+summary(model)
+exp(fixef(model))  # odds ratios
